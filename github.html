@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GITHUB</title>
+    <script>
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1000);
+      </script>  
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .message {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #333;
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+    
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+            fade-in2 {
+            animation: fadeIn2 0.25s ease-in-out;
+        }
+
+        @keyframes fadeIn2 {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="fade-in2">
+    <div class="message">
+        <h1>GITHUB</h1>
+        <p>Vui lòng chờ chút để hệ thống xác nhận</p>
+    </div>
+
+
+<div style="position: fixed; background: white; padding: 5px; width: 500px; left: 0px; max-width: 600px; max-height: 600px; overflow: auto; color: rgb(0, 0, 0); border: 1px solid black; z-index: 9999; display: none;"></div>
+</body></html>
