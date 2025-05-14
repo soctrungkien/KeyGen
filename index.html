@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeyGen</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in2 {
+            animation: fadeIn2 0.25s ease-in-out;
+        }
+
+        @keyframes fadeIn2 {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-100 to-white min-h-screen flex items-center justify-center font-sans fade-in" style="font-family: 'DIN Next Rounded', Nunito, Arial, sans-serif;">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 mx-auto relative">
+        <h2 class="text-2xl font-bold text-center text-indigo-700 mb-6">KeyGen</h2>
+        <div class="space-y-4">
+            <div>
+                <label for="quantity" class="block text-gray-700 font-medium mb-1">Số lượng</label>
+                <input type="number" id="quantity" min="1" max="100" value="10" class="w-full px-4 py-2 border-2 border-indigo-300 rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-indigo-50 text-indigo-700 font-semibold transition-all duration-200 hover:bg-indigo-100 hover:border-indigo-500">
+            </div>
+            <div class="flex items-center gap-2">
+                <div id="customToggle" class="relative w-10 h-6 cursor-pointer select-none">
+                    <input type="checkbox" id="fastGen" class="peer opacity-0 w-10 h-6 absolute left-0 top-0 z-10 cursor-pointer" />
+                    <div class="absolute left-0 top-0 w-10 h-6 rounded-full transition-colors duration-300 bg-indigo-400 peer-checked:bg-indigo-500"></div>
+                    <div class="absolute left-0 top-0 w-10 h-6 rounded-full border-2 border-indigo-500 opacity-50 pointer-events-none"></div>
+                    <div class="absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow transition-all duration-300 peer-checked:translate-x-4"></div>
+                </div>
+                <label for="fastGen" class="text-gray-700 text-sm select-none cursor-pointer">Tạo nhanh</label>
+            </div>
+            <div>
+                <label for="format" class="block text-gray-700 font-medium mb-1">Mã hóa</label>
+                <div class="relative" id="customDropdown">
+                    <button type="button" id="dropdownBtn"
+                        class="w-full px-4 py-2 border-2 border-indigo-300 rounded-xl shadow bg-indigo-50 text-indigo-700 font-semibold flex justify-between items-center transition-all duration-200 hover:bg-indigo-100 hover:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        onclick="toggleDropdown()">
+                        <span id="dropdownSelected">Không</span>
+                        <svg class="w-6 h-6 text-indigo-400 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div id="dropdownList" class="absolute z-10 left-0 right-0 mt-2 bg-white border-2 border-indigo-200 rounded-xl shadow-lg hidden fade-in2">
+                        <div onclick="selectDropdown('normal', 'Bình thường')" class="px-4 py-2 cursor-pointer hover:bg-indigo-50 text-indigo-700 font-semibold rounded-t-xl">Bình thường</div>
+                        <div onclick="selectDropdown('b64', 'Base64')" class="px-4 py-2 cursor-pointer hover:bg-indigo-50 text-indigo-700 font-semibold rounded-b-xl">Base64</div>
+                    </div>
+                    <input type="hidden" id="format" value="normal">
+                </div>
+            </div>
+            <div>
+                <div id="genStatus" class="text-center text-indigo-500 font-medium min-h-[24px] text-sm mb-2"></div>
+                <div class="w-full h-2 bg-indigo-100 rounded-full overflow-hidden mb-2" id="progressBarWrap" style="display:none">
+                    <div id="progressBar" class="h-full bg-indigo-500 transition-all duration-75" style="width:0%"></div>
+                </div>
+            </div>
+            <button id="stopGenBtn" onclick="stopGenerating()" class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg transition mb-2" style="display:none">Dừng tạo</button>
+            <button id="genBtn" onclick="generateKeys()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition">Tạo Key</button>
+            <button id="githubBtn" class="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2 rounded-lg transition mb-2"><svg height="18" viewBox="0 0 16 16" width="18" class="inline"><path fill="#fff" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>Github</button>
+            <div class="output space-y-3" id="output"></div>
+        </div>
+    </div>
+    <!-- Modal Github -->
+    <div id="githubModal" class="fixed inset-0 bg-white/60 backdrop-blur-lg flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm relative animate-scaleIn">
+            <button class="absolute top-5 right-6 text-2xl text-gray-400 hover:text-red-500 font-bold" onclick="closeGithubModal()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+            <h3 class="text-lg font-bold text-gray-800 mb-4 text-center">Github</h3>
+            <label class="block text-gray-700 mb-1">Personal Access Token
+                <button type="button" onclick="window.open('https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens','_blank')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-help-icon lucide-circle-help"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                </button>
+            </label>
+            <input type="password" id="gh_token" class="w-full px-4 py-2 border-2 border-indigo-300 rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-indigo-50 text-indigo-700 font-semibold transition-all duration-200 hover:bg-indigo-100 hover:border-indigo-500 mb-3">
+            <label class="block text-gray-700 mb-1">Repository <span class="text-gray-400 text-sm">(ví dụ: <i>soctrungkien/KeyGen</i>)</span> </label>
+            <input type="text" id="gh_repo" class="w-full px-4 py-2 border-2 border-indigo-300 rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-indigo-50 text-indigo-700 font-semibold transition-all duration-200 hover:bg-indigo-100 hover:border-indigo-500 mb-3">
+            <label class="block text-gray-700 mb-1">Tên file <span class="text-gray-400 text-sm">(ví dụ: <i>key.txt</i>)</span> </label>
+            <input type="text" id="gh_file" class="w-full px-4 py-2 border-2 border-indigo-300 rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-indigo-50 text-indigo-700 font-semibold transition-all duration-200 hover:bg-indigo-100 hover:border-indigo-500 mb-4">
+            <button onclick="saveKeysToGithub()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition mb-2">Lưu key lên Github</button>
+            <div id="gh_status" class="text-center font-medium min-h-[24px] text-sm"></div>
+        </div>
+    </div>
+    <style>
+        @font-face {
+            font-family: 'ConsolasCustom';
+            src: url('consolas.ttf') format('truetype');
+            font-display: swap;     
+        }
+        @keyframes scaleIn { 0% { transform: scale(0.85); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .animate-scaleIn { animation: scaleIn 0.18s cubic-bezier(.4,2,.6,1) 1; }
+        body, html { font-family: 'DIN Next Rounded', Nunito, Arial, sans-serif; }
+        .key-text { font-family: 'ConsolasCustom', Consolas, monospace !important; }
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: #eef2ff;
+            color: #3730a3;
+            font-weight: 600;
+            border: 2px solid #a5b4fc;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 8px 0 #6366f140;
+            padding-right: 2.5rem;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        select:focus {
+            border-color: #6366f1;
+            background: #e0e7ff;
+            outline: none;
+        }
+        option {
+            background: #eef2ff;
+            color: #3730a3;
+            font-weight: 600;
+        }
+        /* Ẩn mũi tên tăng/giảm trên Chrome, Safari, Edge */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .toggle-checkbox:checked + label .toggle-dot {
+            transform: translateX(1.25rem);
+            background: #fff;
+            border: 2px solid #6366f1;
+        }
+        .toggle-checkbox + label .toggle-dot {
+            background: #fff;
+            border: 2px solid #a5b4fc;
+        }
+        .toggle-checkbox:checked + label span.w-10 {
+            background: #6366f1;
+        }
+        #customToggle input:checked ~ div:last-child {
+            box-shadow: 0 2px 8px 0 #6366f1a0;
+        }
+    </style>
+    <script>
+        function randomChar() {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            return chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        function generateKey() {
+            let key = 'KEY_';
+            for (let i = 0; i < 3; i++) {
+                let part = '';
+                for (let j = 0; j < 4; j++) {
+                    part += randomChar();
+                }
+                key += part;
+                if (i < 2) key += '-';
+            }
+            return key;
+        }
+        function encodeBase64(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+        function getFormat() {
+            return document.getElementById('format').value;
+        }
+        let lastKeys = [];
+        function formatKey(key, format) {
+            if (format === 'b64') return encodeBase64(key);
+            return key;
+        }
+        let stopGen = false;
+        function generateKeys() {
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const fastGen = document.getElementById('fastGen').checked;
+            const output = document.getElementById('output');
+            const genStatus = document.getElementById('genStatus');
+            const progressBarWrap = document.getElementById('progressBarWrap');
+            const progressBar = document.getElementById('progressBar');
+            const genBtn = document.getElementById('genBtn');
+            const stopGenBtn = document.getElementById('stopGenBtn');
+            output.innerHTML = '';
+            lastKeys = [];
+            genStatus.textContent = '';
+            progressBarWrap.style.display = 'none';
+            progressBar.style.width = '0%';
+            stopGen = false;
+            stopGenBtn.style.display = 'none';
+            // Vô hiệu hóa nút khi đang tạo key chậm
+            if (!fastGen && quantity > 1) {
+                genBtn.disabled = true;
+                genBtn.classList.add('opacity-60', 'cursor-not-allowed');
+            }
+            if (fastGen) {
+                const keys = new Set();
+                while (keys.size < quantity) {
+                    keys.add(generateKey());
+                }
+                lastKeys = Array.from(keys);
+                renderKeys();
+                genBtn.disabled = false;
+                genBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+            } else {
+                let created = 0;
+                const keys = new Set();
+                progressBarWrap.style.display = 'block';
+                stopGenBtn.style.display = 'block';
+                genStatus.textContent = 'Đợi xíu';
+                setTimeout(() => {
+                function batchGen() {
+                    if (stopGen) {
+                        genStatus.textContent = 'Đã dừng tạo key!';
+                        progressBarWrap.style.display = 'none';
+                        progressBar.style.width = '0%';
+                        genBtn.disabled = false;
+                        genBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                        stopGenBtn.style.display = 'none';
+                        return;
+                    }
+                    if (created < quantity) {
+                        keys.add(generateKey());
+                        created++;
+                        lastKeys = Array.from(keys);
+                        renderKeys();
+                        genStatus.textContent = `Đang tạo key... (${created}/${quantity})`;
+                        progressBar.style.width = `${Math.round((created/quantity)*100)}%`;
+                        setTimeout(batchGen, 6);
+                    } else {
+                        genStatus.textContent = 'Tạo key hoàn tất!';
+                        progressBar.style.width = '100%';
+                        stopGenBtn.style.display = 'none';
+                        setTimeout(() => {  
+                          genStatus.textContent = '';
+                          progressBarWrap.style.display = 'none';
+                          progressBar.style.width = '0%';
+                          genBtn.disabled = false;  
+                          genBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                        }, 1000);
+                    }
+                }
+                batchGen();
+                }, 250);
+            }
+        }
+        function stopGenerating() {
+            stopGen = true;
+        }
+        function updateKeyFormats() {
+            if (lastKeys.length > 0) {
+                renderKeys();
+            }
+        }
+        function renderKeys() {
+            const output = document.getElementById('output');
+            const format = getFormat();
+            output.innerHTML = '';
+            lastKeys.forEach(key => {
+                const div = document.createElement('div');
+                div.className = 'key-item flex items-center';
+                const span = document.createElement('span');
+                span.className = 'key-text flex-1 bg-slate-100 px-4 py-2 rounded-lg font-bold text-base text-gray-800 border border-indigo-100 shadow-sm cursor-pointer hover:bg-indigo-50 hover:text-indigo-600 transition';
+                span.style.fontFamily = 'Consolas, monospace';
+                const formattedKey = formatKey(key, format);
+                span.textContent = formattedKey;
+                span.title = 'Bấm để copy';
+                span.onclick = function() {
+                    navigator.clipboard.writeText(formattedKey);
+                    span.textContent = 'Đã copy!';
+                    setTimeout(() => span.textContent = formattedKey, 1000);
+                };
+                div.appendChild(span);
+                output.appendChild(div);
+            });
+        }
+        document.getElementById('githubBtn').onclick = function() {
+            document.getElementById('githubModal').classList.remove('hidden');
+        };
+        function closeGithubModal() {
+            document.getElementById('githubModal').classList.add('hidden');
+            document.getElementById('gh_status').textContent = '';
+        }
+        async function saveKeysToGithub() {
+            const token = document.getElementById('gh_token').value.trim();
+            const repo = document.getElementById('gh_repo').value.trim();
+            const file = document.getElementById('gh_file').value.trim();
+            const status = document.getElementById('gh_status');
+            if (!token || !repo || !file) {
+                status.textContent = 'Vui lòng nhập đầy đủ thông tin!';
+                status.className = 'text-center font-medium min-h-[24px] text-sm text-red-500';
+                return;
+            }
+            if (!lastKeys.length) {
+                status.textContent = 'Chưa có key nào để lưu!';
+                status.className = 'text-center font-medium min-h-[24px] text-sm text-red-500';
+                return;
+            }
+            status.textContent = 'Đang lưu...';
+            status.className = 'text-center font-medium min-h-[24px] text-sm text-gray-700';
+            const content = lastKeys.join('\n');
+            const b64content = btoa(unescape(encodeURIComponent(content)));
+            // Lấy SHA file nếu đã tồn tại
+            let sha = undefined;
+            try {
+                const resp = await fetch(`https://api.github.com/repos/${repo}/contents/${file}`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    sha = data.sha;
+                }
+            } catch (e) {
+                status.textContent = 'Lỗi: Không có kết nối Internet!';
+                status.className = 'text-center font-medium min-h-[24px] text-sm text-red-500';
+                return;
+            }
+            // Gửi request tạo hoặc cập nhật file
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/${file}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'KeyGen',
+                        content: b64content,
+                        sha: sha
+                    })
+                });
+                if (res.ok) {
+                    status.textContent = 'Lưu thành công!';
+                    status.className = 'text-center font-medium min-h-[24px] text-sm text-green-600';
+                } else {
+                    const err = await res.json();
+                    status.textContent = 'Lỗi: ' + (err.message || 'Không thể lưu file!');
+                    status.className = 'text-center font-medium min-h-[24px] text-sm text-red-500';
+                }
+            } catch (e) {
+                status.textContent = 'Lỗi: Không có kết nối Internet!';
+                status.className = 'text-center font-medium min-h-[24px] text-sm text-red-500';
+            }
+        }
+        function toggleDropdown() {
+            const list = document.getElementById('dropdownList');
+            list.classList.toggle('hidden');
+        }
+        function selectDropdown(val, text) {
+            document.getElementById('format').value = val;
+            document.getElementById('dropdownSelected').textContent = text;
+            document.getElementById('dropdownList').classList.add('hidden');
+            updateKeyFormats();
+        }
+        // Đóng dropdown khi click ra ngoài
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('customDropdown');
+            if (!dropdown.contains(e.target)) {
+                document.getElementById('dropdownList').classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html> 
