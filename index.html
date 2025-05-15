@@ -6,6 +6,8 @@
     <title>KeyGen</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         .fade-in {
             animation: fadeIn 1s ease-in-out;
@@ -24,11 +26,96 @@
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+                /* CSS cho spacer */
+                .spacer {
+            display: block;
+        }
+
+        /* Class cho chiều cao */
+        .ch-0 { height: 0; }
+        .ch-1 { height: 0.25rem; } /* 4px */
+        .ch-2 { height: 0.5rem; }  /* 8px */
+        .ch-3 { height: 1rem; }    /* 16px */
+        .ch-4 { height: 1.5rem; }  /* 24px */
+        .ch-5 { height: 2rem; }    /* 32px */
+        .ch-6 { height: 3rem; }    /* 48px */
+        .ch-7 { height: 4rem; }    /* 64px */
+        .ch-8 { height: 5rem; }    /* 80px */
+        .ch-9 { height: 6rem; }    /* 96px */
+        .ch-10 { height: 8rem; }   /* 128px */
+
+        /* Class cho chiều rộng */
+        .rw-0 { width: 0; }
+        .rw-1 { width: 0.25rem; }  /* 4px */
+        .rw-2 { width: 0.5rem; }   /* 8px */
+        .rw-3 { width: 1rem; }     /* 16px */
+        .rw-4 { width: 1.5rem; }   /* 24px */
+        .rw-5 { width: 2rem; }     /* 32px */
+        .rw-6 { width: 3rem; }     /* 48px */
+        .rw-7 { width: 4rem; }     /* 64px */
+        .rw-8 { width: 5rem; }     /* 80px */
+        .rw-9 { width: 6rem; }     /* 96px */
+        .rw-10 { width: 8rem; }    /* 128px */
+        .rw-full { width: 100%; }
+        .rw-auto { width: auto; }
+
+        /* Responsive breakpoints */
+        @media (min-width: 640px) {
+            .sm\:ch-1 { height: 0.25rem; }
+            .sm\:ch-2 { height: 0.5rem; }
+            .sm\:ch-3 { height: 1rem; }
+            .sm\:ch-4 { height: 1.5rem; }
+            .sm\:ch-5 { height: 2rem; }
+            .sm\:rw-1 { width: 0.25rem; }
+            .sm\:rw-2 { width: 0.5rem; }
+            .sm\:rw-3 { width: 1rem; }
+            .sm\:rw-4 { width: 1.5rem; }
+            .sm\:rw-5 { width: 2rem; }
+        }
+
+        @media (min-width: 1024px) {
+            .lg\:ch-1 { height: 0.25rem; }
+            .lg\:ch-2 { height: 0.5rem; }
+            .lg\:ch-3 { height: 1rem; }
+            .lg\:ch-4 { height: 1.5rem; }
+            .lg\:ch-5 { height: 2rem; }
+            .lg\:rw-1 { width: 0.25rem; }
+            .lg\:rw-2 { width: 0.5rem; }
+            .lg\:rw-3 { width: 1rem; }
+            .lg\:rw-4 { width: 1.5rem; }
+            .lg\:rw-5 { width: 2rem; }
+        }
+
+        /* Class cho spacer inline */
+        .spacer-inline {
+            display: inline-block;
+            height: auto;
+        }
+        /* Scrollbar đẹp, màu nền nhạt */
+        ::-webkit-scrollbar {
+            width: 10px;
+            background: #eef2ff;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7d2fe;
+            border-radius: 10px;
+            border: 2px solid #eef2ff;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a5b4fc;
+        }
+        /* Firefox */
+        html {
+            scrollbar-color: #c7d2fe #eef2ff;
+            scrollbar-width: thin;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-100 to-white min-h-screen flex items-center justify-center font-sans fade-in" style="font-family: 'DIN Next Rounded', Nunito, Arial, sans-serif;">
+    <div class="spacer ch-4"></div>
     <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 mx-auto relative">
-        <h2 class="text-2xl font-bold text-center text-indigo-700 mb-6">KeyGen</h2>
+        <h2 class="text-2xl font-bold text-center text-indigo-700 mb-6 mt-8">KeyGen</h2>
         <div class="space-y-4">
             <div>
                 <label for="quantity" class="block text-gray-700 font-medium mb-1">Số lượng</label>
@@ -62,6 +149,11 @@
                 </div>
             </div>
             <div>
+                <label for="keyPattern" class="block text-gray-700 font-medium mb-1">Định dạng key <span class="text-red-500">*</span></label>
+                <input type="text" id="keyPattern" class="w-full px-4 py-2 border-2 border-indigo-300 rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-indigo-50 text-indigo-700 font-semibold transition-all duration-200 hover:bg-indigo-100 hover:border-indigo-500 font-mono" style="font-family: Sono" value="KEY_****-****-****">
+                <div class="text-xs text-gray-500 mt-1">Dùng <b>*</b> để đại diện cho ký tự ngẫu nhiên (a-z, 0-9)</div>
+            </div>
+            <div>
                 <div id="genStatus" class="text-center text-indigo-500 font-medium min-h-[24px] text-sm mb-2"></div>
                 <div class="w-full h-2 bg-indigo-100 rounded-full overflow-hidden mb-2" id="progressBarWrap" style="display:none">
                     <div id="progressBar" class="h-full bg-indigo-500 transition-all duration-75" style="width:0%"></div>
@@ -69,8 +161,9 @@
             </div>
             <button id="stopGenBtn" onclick="stopGenerating()" class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg transition mb-2" style="display:none">Dừng tạo</button>
             <button id="genBtn" onclick="generateKeys()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition">Tạo Key</button>
+            <button id="downloadBtn" onclick="downloadKeys()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition mb-2">Lưu file về máy</button>
             <button id="githubBtn" class="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2 rounded-lg transition mb-2"><svg height="18" viewBox="0 0 16 16" width="18" class="inline"><path fill="#fff" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>Github</button>
-            <div class="output space-y-3" id="output"></div>
+            <div class="output space-y-3 mb-8" id="output"></div>
         </div>
     </div>
     <!-- Modal Github -->
@@ -84,7 +177,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-help-icon lucide-circle-help"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
                 </button>
             </label>
-            <input type="password" id="gh_token" class="w-full px-4 py-2 border-2 border-indigo-300 rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-indigo-50 text-indigo-700 font-semibold transition-all duration-200 hover:bg-indigo-100 hover:border-indigo-500 mb-3">
+            <input type="password" id="gh_token" class="w-full px-4 py-2 border-2 border-indigo-300 rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-indigo-50 text-indigo-700 font-semibold transition-all duration-200 hover:bg-indigo-100 hover:border-indigo-500 mb-3 font-mono" style="font-family: 'Inconsolata', Inconsolata, monospace;">
             <div class="text-xs text-gray-500 mb-2">
                 Hỗ trợ cả <b>Fine-grained</b> và <b>Classic</b> token.
             </div>
@@ -105,7 +198,7 @@
         @keyframes scaleIn { 0% { transform: scale(0.85); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .animate-scaleIn { animation: scaleIn 0.18s cubic-bezier(.4,2,.6,1) 1; }
         body, html { font-family: 'DIN Next Rounded', Nunito, Arial, sans-serif; }
-        .key-text { font-family: 'ConsolasCustom', Consolas, monospace !important; }
+        .key-text { font-family: 'ConsolasCustom', Consolas, monospace, Sono !important; }
         select {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -157,14 +250,10 @@
             return chars.charAt(Math.floor(Math.random() * chars.length));
         }
         function generateKey() {
-            let key = 'KEY_';
-            for (let i = 0; i < 3; i++) {
-                let part = '';
-                for (let j = 0; j < 4; j++) {
-                    part += randomChar();
-                }
-                key += part;
-                if (i < 2) key += '-';
+            const pattern = document.getElementById('keyPattern') ? document.getElementById('keyPattern').value : 'KEY_****-****-****';
+            let key = '';
+            for (let i = 0; i < pattern.length; i++) {
+                key += pattern[i] === '*' ? randomChar() : pattern[i];
             }
             return key;
         }
@@ -268,8 +357,8 @@
                 const div = document.createElement('div');
                 div.className = 'key-item flex items-center';
                 const span = document.createElement('span');
-                span.className = 'key-text flex-1 bg-slate-100 px-4 py-2 rounded-lg font-bold text-base text-gray-800 border border-indigo-100 shadow-sm cursor-pointer hover:bg-indigo-50 hover:text-indigo-600 transition';
-                span.style.fontFamily = 'Consolas, monospace';
+                span.className = 'key-text flex-1 bg-slate-100 px-4 py-2 rounded-lg font-bold text-base text-gray-800 border border-indigo-100 shadow-sm cursor-pointer hover:bg-indigo-50 hover:text-indigo-600 transition truncate';
+                span.style.fontFamily = 'Sono, Consolas, monospace, Inconsolata';
                 const formattedKey = formatKey(key, format);
                 span.textContent = formattedKey;
                 span.title = 'Bấm để copy';
@@ -306,7 +395,8 @@
             }
             status.textContent = 'Đang lưu...';
             status.className = 'text-center font-medium min-h-[24px] text-sm text-gray-700';
-            const content = lastKeys.join('\n');
+            const format = getFormat();
+            const content = lastKeys.map(key => formatKey(key, format)).join('\n');
             const b64content = btoa(unescape(encodeURIComponent(content)));
             // Lấy SHA file nếu đã tồn tại
             let sha = undefined;
@@ -367,6 +457,26 @@
                 document.getElementById('dropdownList').classList.add('hidden');
             }
         });
+        function downloadKeys() {
+            if (!lastKeys.length) {
+                    genStatus.textContent = 'Chưa có key nào để lưu!';
+                return;
+            }
+            const format = getFormat();
+            const keys = lastKeys.map(key => formatKey(key, format)).join('\n');
+            const blob = new Blob([keys], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'key.txt';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 0);
+        }
     </script>
+    <div class="spacer ch-4"></div>
 </body>
 </html> 
